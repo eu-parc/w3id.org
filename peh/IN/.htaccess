@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# PEH Indicators vocabulary redirections
+# Format: Local ID to nanopub

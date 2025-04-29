@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# PEH ObservableProperties vocabulary redirections
+# Format: Local ID to nanopub

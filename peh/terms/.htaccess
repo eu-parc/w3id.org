@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# PEH data model terms redirections
+# Format: Local ID to nanopub
