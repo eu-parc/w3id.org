@@ -1,4 +1,5 @@
-# Turn off MultiViews
+RewriteEngine On
+Options +FollowSymLinks
 Options -MultiViews
 
 # Directive to ensure *.rdf files served as appropriate content type,
@@ -9,8 +10,6 @@ AddType text/turtle .ttl
 AddType application/n-triples .n3
 AddType application/ld+json .json
 
-RewriteEngine on
-Options +FollowSymLinks
 
 # Rewrite rule for latest version.
 RewriteCond %{HTTP_ACCEPT} !application/rdf\+xml.*(text/html|application/xhtml\+xml)
@@ -28,6 +27,7 @@ RewriteRule ^MA-(.*)$ MA/$1 [L] # Matrices
 RewriteRule ^UN-(.*)$ UN/$1 [L] # Units
 RewriteRule ^IN-(.*)$ IN/$1 [L] # Indicators
 RewriteRule ^OP-(.*)$ OP/$1 [L] # ObservableProperties
+RewriteRule ^OP-(.*)$ GR/$1 [L] # Groupings
 
 
 # ===============
@@ -35,3 +35,15 @@ RewriteRule ^OP-(.*)$ OP/$1 [L] # ObservableProperties
 # ===============
 # PEH data model terms
 RewriteRule ^terms(.*)$ terms/$1 [L]
+
+# ===============
+# MODEL
+# ===============
+# Redirect for /peh/peh-model based on content negotiation
+RewriteCond %{REQUEST_URI} ^/peh-model/?$
+# If the request is from a typical browser (user-agent contains Mozilla) OR Accept header prefers HTML
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^peh-model/?$ https://eu-parc.github.io/parco-hbm/ [R=303,L]
+# Otherwise redirect to Nanopub
