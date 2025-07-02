@@ -11,7 +11,10 @@ AddType application/n-triples .n3
 AddType application/ld+json .json
 
 
-# Rewrite rule for latest version.
+# ===============
+# BASE REDIRECT
+# ===============
+# redirect for w3id.org/peh
 RewriteCond %{HTTP_ACCEPT} !application/rdf\+xml.*(text/html|application/xhtml\+xml)
 RewriteCond %{HTTP_ACCEPT} text/html [OR]
 RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml [OR]
@@ -22,12 +25,135 @@ RewriteRule ^$ https://github.com/eu-parc/parco-hbm/blob/main/README.md [R=303,L
 # ===============
 # VOCABULARIES
 # ===============
-# Send links for each vocabulary to their respective directory
+# Send links for each vocabulary term to their respective directory
 RewriteRule ^MA-(.*)$ MA/$1 [L] # Matrices
 RewriteRule ^UN-(.*)$ UN/$1 [L] # Units
 RewriteRule ^IN-(.*)$ IN/$1 [L] # Indicators
 RewriteRule ^OP-(.*)$ OP/$1 [L] # ObservableProperties
-RewriteRule ^OP-(.*)$ GR/$1 [L] # Groupings
+RewriteRule ^GR-(.*)$ GR/$1 [L] # Groupings
+RewriteRule ^BE-(.*)$ BE/$1 [L] # BioChemEntities
+
+### Redirect links for the vocabulary landing pages
+## Matrices
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/matrices/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^matrices/?$  https://raw.githubusercontent.com/eu-parc/matrix-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/matrices/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^matrices/?$ https://eu-parc.github.io/matrix-vocabulary/matrices [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/matrices/?$
+RewriteRule ^matrices/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
+
+## Biochementities
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/biochementities/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^biochementities/?$  https://raw.githubusercontent.com/eu-parc/biochementity-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/biochementities/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^biochementities/?$ https://eu-parc.github.io/biochementity-vocabulary/biochementities [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/biochementities/?$
+RewriteRule ^biochementities/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
+
+## Units
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/units/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^units/?$  https://raw.githubusercontent.com/eu-parc/unit-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/units/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^units/?$ https://eu-parc.github.io/unit-vocabulary/units [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/units/?$
+RewriteRule ^units/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
+
+## Indicators
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/indicators/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^indicators/?$  https://raw.githubusercontent.com/eu-parc/indicator-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/indicators/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^indicators/?$ https://eu-parc.github.io/indicator-vocabulary/indicators [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/indicators/?$
+RewriteRule ^indicators/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
+
+## Grouping
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/groupings/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^groupings/?$  https://raw.githubusercontent.com/eu-parc/grouping-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/groupings/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^groupings/?$ https://eu-parc.github.io/grouping-vocabulary/groupings [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/groupings/?$
+RewriteRule ^groupings/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
+
+
+## Observable Properties
+# 1. Redirect RDF requests to OWL file
+RewriteCond %{REQUEST_URI} ^/observable-properties/?$
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^observable-properties/?$  https://raw.githubusercontent.com/eu-parc/observable-property-vocabulary/main/docs/voc.skos.ttl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/observable-properties/?$
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
+RewriteRule ^observable-properties/?$ https://eu-parc.github.io/observable-property-vocabulary/observable-properties [R=303,L]
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/observable-properties/?$
+RewriteRule ^observable-properties/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub
 
 
 # ===============
@@ -39,11 +165,26 @@ RewriteRule ^terms(.*)$ terms/$1 [L]
 # ===============
 # MODEL
 # ===============
-# Redirect for /peh/peh-model based on content negotiation
+# ========================
+# MODEL: /peh-model
+# ========================
+
+# 1. Redirect RDF requests to OWL file
 RewriteCond %{REQUEST_URI} ^/peh-model/?$
-# If the request is from a typical browser (user-agent contains Mozilla) OR Accept header prefers HTML
+RewriteCond %{HTTP_ACCEPT} application/rdf\+xml [OR]
+RewriteCond %{HTTP_ACCEPT} application/ld\+json [OR]
+RewriteCond %{HTTP_ACCEPT} text/turtle [OR]
+RewriteCond %{HTTP_ACCEPT} application/n-triples
+RewriteRule ^peh-model/?$ https://raw.githubusercontent.com/eu-parc/parco-hbm/main/linkml/owl/peh.owl [R=303,L]
+
+# 2. Redirect HTML-based requests (browsers) to GitHub Pages
+RewriteCond %{REQUEST_URI} ^/peh-model/?$
 RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
 RewriteCond %{HTTP_ACCEPT} text/html [OR]
 RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
 RewriteRule ^peh-model/?$ https://eu-parc.github.io/parco-hbm/ [R=303,L]
-# Otherwise redirect to Nanopub
+
+# 3. Fallback for unsupported Accept headers
+RewriteCond %{REQUEST_URI} ^/peh-model/?$
+RewriteRule ^peh-model/?$ - [R=406,L]
+# TODO: Otherwise redirect to Nanopub

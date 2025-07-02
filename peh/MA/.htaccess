@@ -3,9 +3,14 @@ RewriteEngine On
 # PEH Matrices vocabulary redirections
 # Redirect for /peh/terms based on content negotiation
 # If the request is from a typical browser (user-agent contains Mozilla) OR Accept header prefers HTML
+RewriteCond %{REQUEST_URI} ^(.+)?$
 RewriteCond %{HTTP_USER_AGENT} ^Mozilla/ [OR]
 RewriteCond %{HTTP_ACCEPT} text/html [OR]
 RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml
 RewriteRule ^(.+)$ https://eu-parc.github.io/matrix-vocabulary/$1/ [R=303,L]
 
-# Otherwise redirect to Nanopub.
+# else Fallback
+RewriteCond %{REQUEST_URI} ^(.+)?$
+RewriteRule ^(.+)$ - [R=406,L]
+
+# TODO: redirect to Nanopub.
